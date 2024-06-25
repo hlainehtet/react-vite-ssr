@@ -3,6 +3,9 @@ import fs from "fs";
 import path from "path";
 import express from "express";
 import { createServer as createViteServer } from "vite";
+import { Helmet } from "react-helmet";
+import { renderToString } from "react-dom/server";
+import React from "react";
 
 const isProduction = process.env.NODE_ENV === "production";
 const Port = process.env.PORT || 3000;
@@ -59,8 +62,14 @@ app.use("*", async (req, res, next) => {
       render = (await import("./dist/server/entry-server.js")).render;
     }
 
+    const helmet = Helmet.renderStatic();
     const rendered = await render({ path: req.originalUrl }, ssrManifest);
-    const html = template.replace(`<!--app-html-->`, rendered ?? "");
+    const appContent = rendered ?? "";
+    const html = template
+      .replace("<!--helmet-title-->", helmet.title.toString())
+      .replace("<!--helmet-meta-->", helmet.meta.toString())
+      .replace("<!--helmet-link-->", helmet.link.toString())
+      .replace("<!--app-html-->", appContent);
 
     res.status(200).setHeader("Content-Type", "text/html").end(html);
   } catch (error) {

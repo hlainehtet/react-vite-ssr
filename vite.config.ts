@@ -9,6 +9,10 @@ export default defineConfig({
     external: ["react-router-dom"],
     noExternal: ["react-helmet-async"],
   },
+  build: {
+    ssr: true,
+    outDir: "dist-ssr",
+  },
 
   resolve: {
     alias: {

@@ -1,4 +1,3 @@
 {
-  "version": 3,
-  "cache": ["./api/*", "./dist/server/*", "./dist/client/*"]
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
 }
